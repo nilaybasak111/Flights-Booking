@@ -14,16 +14,6 @@ class CrudRepository {
     return response;
   }
 
-  // Delete
-  async destroy(data) {
-    const response = await this.model.destroy({
-      where: {
-        id: data,
-      },
-    });
-    return response;
-  }
-
   // Get
   async get(data) {
     const response = await this.model.findByPk(data);
@@ -36,6 +26,19 @@ class CrudRepository {
   // Get All
   async getall() {
     const response = await this.model.findAll();
+    return response;
+  }
+
+  // Delete
+  async destroy(data) {
+    const response = await this.model.destroy({
+      where: {
+        id: data,
+      },
+    });
+    if(!response){
+      throw new AppError("Not Able to Find the Airplane", StatusCodes.NOT_FOUND)
+    }
     return response;
   }
 
