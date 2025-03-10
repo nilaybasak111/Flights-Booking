@@ -13,4 +13,4 @@ app.listen(ServerConfig.PORT, () => {
     console.log(`Successfully started the server on PORT : ${ServerConfig.PORT}`);
 });
 
-// 00:30:00
+// 01:00:00
