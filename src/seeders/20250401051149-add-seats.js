@@ -1,5 +1,5 @@
 "use strict";
-//const { Op } = require("sequelize");
+const { Op } = require("sequelize");
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
