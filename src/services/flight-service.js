@@ -31,7 +31,7 @@ async function getAllFlights(query) {
   let customeFilter = {};
   let sortFilter = [];
   const endingTripTime = " 23:59:59";
-  
+
   // Filter Your Trip Flights using the Airport Code
   // trips = BOM-MAA
   if (query.trips) {
@@ -66,14 +66,17 @@ async function getAllFlights(query) {
     };
   }
 
-  if(query.sort){
+  if (query.sort) {
     const params = query.sort.split(",");
-    const sortFilters = params.map((params)=>params.split("_"));
+    const sortFilters = params.map((params) => params.split("_"));
     sortFilter = sortFilters;
   }
 
   try {
-    const flights = await flightRepository.getAllFlights(customeFilter, sortFilter);
+    const flights = await flightRepository.getAllFlights(
+      customeFilter,
+      sortFilter
+    );
     return flights;
   } catch (error) {
     throw new AppError(
@@ -102,4 +105,22 @@ async function getFlight(id) {
   }
 }
 
-module.exports = { createFlight, getAllFlights, getFlight };
+// Update (Increment/Decrement) An Airplane Seats
+async function updateSeats(data) {
+  try {
+    const response = await flightRepository.updateRemainingSeats(
+      data.flightId,
+      data.seats,
+      data.dec
+    );
+    return response;
+  } catch (error) {
+    console.log("Error in updateSeats in flight service", error);
+    throw new AppError(
+      "Cannot Update Data of the Flight",
+      StatusCodes.INTERNAL_SERVER_ERROR
+    );
+  }
+}
+
+module.exports = { createFlight, getAllFlights, getFlight, updateSeats };
