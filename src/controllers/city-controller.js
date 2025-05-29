@@ -22,11 +22,11 @@ async function createCity(req, res) {
 
 /*
  * DELETE : /api/v1/cities/
- * req.body = { name : "New York" }
+ * req.body = { name : "kolkata" }
  */
 async function deleteCity(req, res) {
   try {
-    const city = await CityService.deleteCity(req.params.id);
+    const city = await CityService.deleteCity(req.body.name);
     SuccessResponse.data = city;
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {

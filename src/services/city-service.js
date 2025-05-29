@@ -52,11 +52,28 @@ async function updateCity(data) {
 }
 
 // This Function Deletes City From The Database
-async function deleteCity(id) {
+async function deleteCity(name) {
   try {
-    const city = await cityRepository.destroy(id);
+    const city = await cityRepository.deleteCityByName(name);
+    // If the city is not found, the destroy method returns 0
+    // if (city === 0) {
+    //   console.log("City is not found");
+    //   throw new AppError(
+    //     `${name} City is Already Deleted Or Does Not Exist.`,
+    //     StatusCodes.NOT_FOUND
+    //   );
+    //   // You can also return a message instead of throwing an error
+    //   // return {
+    //   //   message: `${name} City is Already Deleted Or Does Not Exist.`,
+    //   // };
+    // }
     return city;
   } catch (error) {
+    // If You Want to Printt "${name} City is Already Deleted Or Does Not Exist."
+    // Then Use the Below Code
+    // if (error instanceof AppError) {
+    //   throw error;
+    // }
     if (
       error.name == "SequelizeValidationError" ||
       error.name == "SequelizeUniqueConstraintError"
@@ -69,7 +86,7 @@ async function deleteCity(id) {
       throw new AppError(explanation, StatusCodes.BAD_REQUEST);
     }
     throw new AppError(
-      "Cannot Delete A City Object",
+      `Cannot Delete A ${name} City Object`,
       StatusCodes.INTERNAL_SERVER_ERROR
     );
   }
