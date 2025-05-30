@@ -19,6 +19,7 @@ router.delete(
 // PUT : /api/v1/cities/
 router.put(
   "/",
+  CityMiddlewares.validateUpdateRequest,
   CityController.updateCity
 );
 

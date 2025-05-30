@@ -13,6 +13,7 @@ async function createCity(req, res) {
       name: req.body.name,
     });
     SuccessResponse.data = city;
+    console.log("This is create city ",SuccessResponse);
     return res.status(StatusCodes.CREATED).json(SuccessResponse);
   } catch (error) {
     ErrorResponse.error = error;
@@ -51,7 +52,10 @@ async function updateCity(req, res) {
 async function deleteCity(req, res) {
   try {
     const city = await CityService.deleteCity(req.body.name);
-    SuccessResponse.data = city;
+    // SuccessResponse.data = city;
+    SuccessResponse.data = {
+      message: `${req.body.name} City Deleted Successfully`
+    };
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
     ErrorResponse.error = error;
