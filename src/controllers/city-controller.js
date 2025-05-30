@@ -21,6 +21,30 @@ async function createCity(req, res) {
 }
 
 /*
+ * PUT : /api/v1/cities/
+ * req.body = { currentCity : "Kolkata" }, { updateCityName : "Mumbai" }
+ */
+async function updateCity(req, res) {
+  try {
+    const currentCity = req.body.currentCity;
+    const updateCityName = req.body.updateCityName;
+    const city = await CityService.updateCity(
+      {
+        name: currentCity,
+      },
+      {
+        name: updateCityName,
+      }
+    );
+    SuccessResponse.data = city;
+    return res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    ErrorResponse.error = error;
+    return res.status(error.statusCode).json(ErrorResponse);
+  }
+}
+
+/*
  * DELETE : /api/v1/cities/
  * req.body = { name : "kolkata" }
  */
@@ -38,4 +62,5 @@ async function deleteCity(req, res) {
 module.exports = {
   createCity,
   deleteCity,
+  updateCity,
 };
