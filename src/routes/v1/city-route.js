@@ -5,8 +5,21 @@ const { CityMiddlewares } = require("../../middlewares");
 const router = express.Router();
 
 // POST : /api/v1/cities/
-router.post("/", CityMiddlewares.validateCreateRequest, CityController.createCity);
+router.post(
+  "/",
+  CityMiddlewares.validateCreateRequest,
+  CityController.createCity
+);
 // DELETE : /api/v1/cities/
-router.delete("/",CityController.deleteCity);
+router.delete(
+  "/",
+  CityMiddlewares.validateDeleteRequest,
+  CityController.deleteCity
+);
+// PUT : /api/v1/cities/
+router.put(
+  "/",
+  CityController.updateCity
+);
 
 module.exports = router;

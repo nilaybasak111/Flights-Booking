@@ -17,8 +17,11 @@ class CrudRepository {
   // Get
   async get(data) {
     const response = await this.model.findByPk(data);
-    if(!response){
-      throw new AppError("Not Able to Find the Resource", StatusCodes.NOT_FOUND)
+    if (!response) {
+      throw new AppError(
+        "Not Able to Find the Resource",
+        StatusCodes.NOT_FOUND
+      );
     }
     return response;
   }
@@ -29,6 +32,20 @@ class CrudRepository {
     return response;
   }
 
+  // Find One
+  async findOne(data) {
+    const response = await this.model.findOne({
+      where: { name: data.where.name },
+    });
+    if (!response) {
+      throw new AppError(
+        "Not Able to Find the Resource",
+        StatusCodes.NOT_FOUND
+      );
+    }
+    return response;
+  }
+
   // Delete
   async destroy(data) {
     const response = await this.model.destroy({
@@ -36,8 +53,11 @@ class CrudRepository {
         id: data,
       },
     });
-    if(!response){
-      throw new AppError("Not Able to Find the Airplane", StatusCodes.NOT_FOUND)
+    if (!response) {
+      throw new AppError(
+        "Not Able to Find the Airplane",
+        StatusCodes.NOT_FOUND
+      );
     }
     return response;
   }

@@ -30,8 +30,19 @@ async function createCity(data) {
 }
 
 // This Function Updates The City In The Database
-async function updateCity(data) {
+async function updateCity(data, updatedData) {
   try {
+    const findId = await cityRepository.findOne({
+      where: {
+        name: data.name,
+      },
+    });
+    const [affectedRows] = await cityRepository.update(findId.id, updatedData);
+    if (affectedRows === 0) {
+      throw new AppError("City is not Updated", StatusCodes.NOT_FOUND);
+    }
+    const updatedCity = await cityRepository.get(findId.id);
+    return updatedCity;
   } catch (error) {
     if (
       error.name == "SequelizeValidationError" ||
@@ -45,7 +56,7 @@ async function updateCity(data) {
       throw new AppError(explanation, StatusCodes.BAD_REQUEST);
     }
     throw new AppError(
-      "Cannot Create A New City Object",
+      "Cannot Update A New City Object",
       StatusCodes.INTERNAL_SERVER_ERROR
     );
   }
