@@ -46,6 +46,27 @@ class CrudRepository {
     return response;
   }
 
+    // Update
+  async update(id, data) {
+    // data --> Data must be an Object --> {col: value, .......}
+    const response = await this.model.update(data, {
+      where: {
+        id: id,
+      },
+    });
+    // response[0] contains the number of updated rows
+    if (!response[0]) {
+      throw new AppError(
+        "Not Able to Find the Resource",
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    // Fetch and return the updated object
+    const updatedObject = await this.model.findByPk(id);
+    return updatedObject;
+  }
+
   // Delete
   async destroy(data) {
     const response = await this.model.destroy({
@@ -59,17 +80,6 @@ class CrudRepository {
         StatusCodes.NOT_FOUND
       );
     }
-    return response;
-  }
-
-  // Update
-  async update(id, data) {
-    // data --> Data must be an Object --> {col: value, .......}
-    const response = await this.model.update(data, {
-      where: {
-        id: id,
-      },
-    });
     return response;
   }
 }

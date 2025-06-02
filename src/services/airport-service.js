@@ -19,6 +19,17 @@ async function createAirport(data) {
       console.log(explanation);
       throw new AppError(explanation, StatusCodes.BAD_REQUEST);
     }
+
+    if (error.name == "SequelizeUniqueConstraintError") {
+      let explanation = [];
+      error.errors.forEach((err) => {
+        explanation.push(`${data.name} Already Exists`);
+      });
+      console.log(explanation);
+      throw new AppError(explanation, StatusCodes.BAD_REQUEST);
+      //throw new AppError(`${data.name} Already Exists`, StatusCodes.BAD_REQUEST);
+    }
+
     throw new AppError(
       "Cannot Create A New Airport Object",
       StatusCodes.INTERNAL_SERVER_ERROR
@@ -58,6 +69,25 @@ async function getAirports() {
   }
 }
 
+// Update an Airport
+async function updateAirport(id, data) {
+  try {
+    const response = await airportRepository.update(id, data);
+    return response;
+  } catch (error) {
+    if (error.statusCode == StatusCodes.NOT_FOUND) {
+      throw new AppError(
+        "The Airport You Requested to Update is not Present",
+        error.statusCode
+      );
+    }
+    throw new AppError(
+      "Cannot Delete an Airport",
+      StatusCodes.INTERNAL_SERVER_ERROR
+    );
+  }
+}
+
 // Delete An Airport
 async function destroyAirport(id) {
   try {
@@ -77,4 +107,10 @@ async function destroyAirport(id) {
   }
 }
 
-module.exports = { createAirport, getAirport, getAirports, destroyAirport };
+module.exports = {
+  createAirport,
+  getAirport,
+  getAirports,
+  updateAirport,
+  destroyAirport,
+};
