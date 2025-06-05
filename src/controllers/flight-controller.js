@@ -10,8 +10,8 @@ const { SuccessResponse, ErrorResponse } = require("../utils/common");
  *              airplaneId : "a380",
  *              departureAirportId : 8,
  *              arrivalAirportId : 3,
- *              arrivalTime : "11:00:40",
- *              departureTime : "09:10:00",
+ *              arrivalTime : "2025-06-05T10:10:00", (The date format should be in ISO 8601 format)
+ *              departureTime : "2025-06-05T09:10:00", (The date format should be in ISO 8601 format)
  *              price : 5000,
  *              boardingGate : "A1",
  *              totalSeats : 200

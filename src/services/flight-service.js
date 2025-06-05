@@ -9,9 +9,31 @@ const flightRepository = new FlightRepository();
 // Create an Airplane
 async function createFlight(data) {
   try {
+    // departureTime > arrivalTime Check Done in the Flight Middleware
+    // Uncomment the below code if you want to do it here.
+    // const arrivalTime = data.arrivalTime;
+    // const departureTime = data.departureTime;
+    //   if (departureTime > arrivalTime) {
+    //   console.log("Departure Time is before Arrival Time");
+    //   throw new AppError(
+    //     "DepartureTime Must Be Before ArrivalTime",
+    //     StatusCodes.BAD_REQUEST
+    //   );
+    // }
+    // // Check if the departure and arrival airports are the same
+    // if (data.departureAirportId === data.arrivalAirportId) {
+    //   throw new AppError(
+    //     "Departure Airport and Arrival Airport Cannot Be Same",
+    //     StatusCodes.BAD_REQUEST
+    //   );
+    // }
+
     const flight = await flightRepository.create(data);
     return flight;
   } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
     if (error.name == "SequelizeValidationError") {
       let explanation = [];
       error.errors.forEach((err) => {

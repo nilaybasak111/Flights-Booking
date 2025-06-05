@@ -25,7 +25,9 @@ function validateCreateRequest(req, res, next) {
   if (!req.body.departureAirportId) {
     ErrorResponse.message = "Something went wrong while creating an Flight";
     ErrorResponse.error = new AppError(
-      ["Departure Airport Id is not found in this format --> departureAirportId"],
+      [
+        "Departure Airport Id is not found in this format --> departureAirportId",
+      ],
       StatusCodes.BAD_REQUEST
     );
     return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
@@ -75,10 +77,37 @@ function validateCreateRequest(req, res, next) {
     );
     return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
   }
+
+  // Check if arrival time is after departure time
+  // Means After the Flight has departed from Airport, it cannot arrive before its departure time
+  // The date format should be in ISO 8601 format
+  // Correct Format: YYYY-MM-DDTHH:mm:ss.sssZ
+  // Example: 2023-10-01T10:00:00.000Z
+  const departureTime = new Date(req.body.departureTime);
+  const arrivalTime = new Date(req.body.arrivalTime);
+  if (departureTime > arrivalTime) {
+    ErrorResponse.message = "Something went wrong while creating an Flight";
+    ErrorResponse.error = new AppError(
+      ["DepartureTime Must Be Before ArrivalTime"],
+      StatusCodes.BAD_REQUEST
+    );
+    return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
+  }
+
+  // Check if the departure and arrival airports are the same
+  if (req.body.departureAirportId === req.body.arrivalAirportId) {
+    ErrorResponse.message = "Something went wrong while creating an Flight";
+    ErrorResponse.error = new AppError(
+      ["Departure Airport and Arrival Airport Cannot Be Same"],
+      StatusCodes.BAD_REQUEST
+    );
+    return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
+  }
+
   next();
 }
 
-function validateUpdateSeatsRequest(req, res, next){
+function validateUpdateSeatsRequest(req, res, next) {
   if (!req.body.seats) {
     ErrorResponse.message = "Something went wrong while Updating an Flight";
     ErrorResponse.error = new AppError(
@@ -87,11 +116,11 @@ function validateUpdateSeatsRequest(req, res, next){
     );
     return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
   }
-  
+
   next();
 }
 
 module.exports = {
   validateCreateRequest,
-  validateUpdateSeatsRequest
+  validateUpdateSeatsRequest,
 };
